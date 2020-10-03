@@ -1,7 +1,6 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-// import create_post from "./component/create_post";
 
 class App extends React.Component {
   constructor(props){
@@ -23,7 +22,7 @@ class App extends React.Component {
     {
       method: 'POST',
       headers: {
-        'content-Type': 'application/json'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(this.state)
     })
@@ -32,24 +31,24 @@ class App extends React.Component {
     window.location.reload()
   }
 
-  componentDisMount() {
+  componentDidMount() {
     this.SeeAll()
   }
 
   BoastView = () => {
-    fetch("http://127.0.0.1:8000/api/roastboast/")
+    fetch("http://127.0.0.1:8000/api/roastboast/BoastViewSet/")
     .then(res => res.json())
     .then(data => this.setState ({posts:data}))
   }
 
   RoastView = () => {
-    fetch("http://127.0.0.1:8000/api/roastboast/")
+    fetch("http://127.0.0.1:8000/api/roastboast/RoastViewSet/")
     .then(res => res.json())
     .then(data => this.setState ({posts:data}))
   }
 
   MostPopularView = () => {
-    fetch("http://127.0.0.1:8000/api/roastboast/")
+    fetch("http://127.0.0.1:8000/api/roastboast/TotalVoteViewSet/")
     .then(res => res.json())
     .then(data => this.setState ({posts:data}))
   }
@@ -61,17 +60,23 @@ class App extends React.Component {
   }
 
   UpvoteView = (id) => {
-    fetch("http://127.0.0.1:8000/api/roastboast/" + id + "/upvote/")
-    .then(res => res.json())
-    .then(data => this.forceUpdate(this.componentDidMount))
-    console.log(id)
+    fetch("http://127.0.0.1:8000/api/roastboast/" + id + "/upvote/",{
+      method: 'POST',
+      headers: {"content-Type": "application/json"}
+    })
+    .then((res) => res.json())
+    .then((res) => {}); 
+    window.location.reload()
   }
 
   DownvoteView = (id) => {
-    fetch("http://127.0.0.1:8000/api/roastboast/" + id + "/downvote/")
-    .then(res => res.json())
-    .then(data => this.forceUpdate(this.componentDidMount))
-    console.log(id)
+    fetch("http://127.0.0.1:8000/api/roastboast/" + id + "/downvote/", {
+      method: "POST",
+      headers: {"content-Type": "application/json"}
+    })
+    .then((res) => res.json())
+    .then((res) => {});
+    window.location.reload()
   }
 
 
@@ -100,8 +105,8 @@ class App extends React.Component {
                 <li>
                   <h3>This is a:</h3>{p.choices ? "Boast": "Roast"},
                   <h3>Message:</h3>{p.body},
-                  <h3>Upvotes:</h3>{p.upvote}, <button onClick={e => this.UpvoteView(e.id)}>Up Vote!</button>
-                  <h3>Downvotes:</h3>{p.downvote}, <button onClick={e => this.DownvoteView(e.id)}>Down Vote!</button>
+                  <h3>Upvotes:</h3>{p.upvote}, <button onClick={e => this.UpvoteView(p.id)}>Up Vote!</button>
+                  <h3>Downvotes:</h3>{p.downvote}, <button onClick={e => this.DownvoteView(p.id)}>Down Vote!</button>
                   <h3>Total Votes:</h3>{p.total_vote}
                 </li>
               </ul>
